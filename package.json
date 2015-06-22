@@ -1,0 +1,32 @@
+{
+  "name": "node-gedcom",
+  "version": "0.0.1",
+  "description": "A stream-oriented parser that emits GEDCOM X-compliant data from legacy GEDCOM files",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drenglish/node-gedcom"
+  },
+  "keywords": [
+    "gedcom",
+    "gedcomx",
+    "genealogy"
+  ],
+  "author": "Michael Dietz",
+  "license": "GPL",
+  "bugs": {
+    "url": "https://github.com/drenglish/node-gedcom/issues"
+  },
+  "homepage": "https://github.com/drenglish/node-gedcom",
+  "dependencies": {
+    "byline": "^4.2.1",
+    "through2": "^2.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "should": "^6.0.3"
+  }
+}
