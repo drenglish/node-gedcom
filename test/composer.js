@@ -39,4 +39,22 @@ describe('A GEDCOM X object composer', function() {
 		t.push({level:1,tag:'NAME',value:'Michael Dennis /Dietz/'});
 		t.push(null);
 	});
+	it('should emit as many Person objects as there are INDI lines in an input file', function(cb) {
+		this.timeout(5000);
+
+		var gedtext = fs.readFileSync(path.join(process.cwd(),'ged/family.ged'), {encoding: 'utf8'}),
+			persCount = gedtext.match(/^0.+INDI/gm).length;
+
+		var c = comp(), stack = [];
+		c.on('data', function(o) {
+			if (o.typeId === Person.typeId) {
+				stack.push(o);
+			}
+		});
+		c.on('end', function() {
+			stack.length.should.equal(persCount);
+			cb();
+		});
+		c.parse(fs.createReadStream(path.join(process.cwd(),'ged/family.ged'), {encoding: 'utf8'}));
+	});
 });
