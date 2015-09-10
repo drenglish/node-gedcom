@@ -4,7 +4,7 @@
   "description": "A stream-oriented parser that emits GEDCOM X-compliant data from legacy GEDCOM files",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --compilers js:mocha-babel"
   },
   "repository": {
     "type": "git",
@@ -28,8 +28,11 @@
   "devDependencies": {
     "babel": "^5.6.14",
     "babel-runtime": "^5.6.15",
+    "chai": "^3.2.0",
+    "chai-as-promised": "^5.1.0",
     "mocha": "^2.2.5",
     "mocha-babel": "^3.0.0",
-    "should": "^6.0.3"
+    "sinon": "^1.15.4",
+    "sinon-chai": "^2.8.0"
   }
 }

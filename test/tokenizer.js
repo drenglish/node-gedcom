@@ -1,18 +1,20 @@
-var should = require('should'),
+var chai = require('chai'),
 	fs = require('fs'),
 	path = require('path'),
-	tok = require('../lib/tokenizer');
+	Tokenizer = require('../lib/Tokenizer');
+
+chai.should();
 
 var gedtext = fs.readFileSync(path.join(process.cwd(),'ged/family.ged'), {encoding: 'utf8'}),
 	lineCount = gedtext.match(/^.+/gm).length,
 	persCount = gedtext.match(/^0.+INDI/gm).length;
 
-describe('A GED file tokenizer', function() {
-	it('should match against all non-blank input lines', function(cb) {
-		var tokenizer = tok(fs.createReadStream(path.join(process.cwd(),'ged/family.ged'), {encoding: 'utf8'}), {parse: false}),
+describe('A GED file tokenizer', () => {
+	it('should match against all non-blank input lines', (cb) => {
+		let tokenizer = new Tokenizer({parse: false}),
 			total = 0;
 
-		tokenizer.on('data', function(tokenzed) {
+		tokenizer.on('data', function(tokenized) {
 			total++;
 		})
 
@@ -20,10 +22,10 @@ describe('A GED file tokenizer', function() {
 			lineCount.should.equal(total);
 			cb();
 		});
-		tokenizer.start();
+		tokenizer.tokenize(fs.createReadStream(path.join(process.cwd(),'ged/family.ged'), {encoding: 'utf8'}));
 	});
-	it('should emit proper tokens for every person entry', function(cb) {
-		var tokenizer = tok(fs.createReadStream(path.join(process.cwd(),'ged/family.ged'), {encoding: 'utf8'}));
+	it('should emit proper tokens for every person entry', (cb) => {
+		var tokenizer = new Tokenizer();
 		var indiTokens = 0;
 
 		tokenizer.on('data', function(tokenized) {
@@ -34,6 +36,6 @@ describe('A GED file tokenizer', function() {
 			indiTokens.should.equal(persCount);
 			cb();
 		});
-		tokenizer.start();
+		tokenizer.tokenize(fs.createReadStream(path.join(process.cwd(),'ged/family.ged'), {encoding: 'utf8'}));
 	});
 });

@@ -1,12 +1,14 @@
-var should = require('should'),
+var chai = require('chai'),
 	through = require('through2'),
 	fs = require('fs'),
 	path = require('path'),
-	comp = require('../lib/composer'),
+	Parser = require('../lib/Parser'),
 	Person = require('../lib/gedx-objects/Person');
 
-describe('A GEDX object', function() {
-	it('should be foldable', function() {
+chai.should();
+
+describe('A GEDX object', () => {
+	it('should be foldable', () => {
 		var p = new Person();
 		p.push({level:0,pointer:'@P1@',tag:'INDI'});
 		p.push({level:1,tag:'NAME',value:'Michael Dennis /Dietz/'});
@@ -17,17 +19,17 @@ describe('A GEDX object', function() {
 		gedx.names[0].nameForms[0].fullText.should.equal('Michael Dennis Dietz');
 	});
 });
-describe('A GEDCOM X object composer', function() {
-	it('should emit a stream of compliant objects', function(cb) {
-		var c = comp(),
+describe('A GEDCOM X object parser', () => {
+	it('should emit a stream of compliant objects', (cb) => {
+		var c = new Parser(),
 			t = through.obj(),
 			stack = [];
 
 		t.pipe(c);
-		c.on('data', function(o) {
+		c.on('data', (o) => {
 			stack.push(o);
 		});
-		c.on('end', function() {
+		c.on('end', () => {
 			stack.length.should.equal(1);
 			stack[0].typeId.should.equal('http://gedcomx.org/v1/Person');
 			stack[0].identifiers[0].should.have.property('value');
@@ -45,13 +47,13 @@ describe('A GEDCOM X object composer', function() {
 		var gedtext = fs.readFileSync(path.join(process.cwd(),'ged/family.ged'), {encoding: 'utf8'}),
 			persCount = gedtext.match(/^0.+INDI/gm).length;
 
-		var c = comp(), stack = [];
-		c.on('data', function(o) {
+		var c = new Parser(), stack = [];
+		c.on('data', (o) => {
 			if (o.typeId === Person.typeId) {
 				stack.push(o);
 			}
 		});
-		c.on('end', function() {
+		c.on('end', () => {
 			stack.length.should.equal(persCount);
 			cb();
 		});
